@@ -1,0 +1,77 @@
+[project]
+name = "tdm-message-proxy"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.136.1",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
+    "uvicorn>=0.47.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "ruff>=0.15.13",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--color=yes",
+    "--strict-markers",
+    "--strict-config"
+]
+
+[tool.mypy]
+strict = true                               # Максимально строгая проверка
+explicit_package_bases = true               # Рассматривать только явно указанные директории как пакеты
+exclude = ["venv", ".venv", "alembic"]      # Игнорировать указанные файлы и директории при проверке
+
+[[tool.mypy.overrides]]                     # Секция переопределения настроек
+module = [                                  # Указывает, к каким модулям применяются следующие правила
+    "pytest.*",
+    "pydantic.*",
+    "fastapi.*",
+    "httpx.*",
+    "pytest_asyncio.*",
+    "passlib.*",
+]
+ignore_missing_imports = true               # Игнорировать ошибки "import not found" или "cannot find implementation" для указанных модулей
+
+
+[tool.ruff]
+line-length = 110
+indent-width = 4
+target-version = "py314"
+exclude = [".venv", ".env", "venv"]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG001", # unused arguments in functions
+    "T201",   # print statements are not allowed
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "W191",  # indentation contains tabs
+    "B904",  # Allow raising exceptions without from e, for HTTPException
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
