@@ -1,6 +1,6 @@
 import time
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 def _generate_client_random_id() -> int:
@@ -12,9 +12,16 @@ class TdmSendTextMessageRequest(BaseModel):
     """Модель запроса на отправку текстового сообщения в TDM."""
 
     clientRandomId: int = Field(
-        default_factory=_generate_client_random_id,
+        default=0,
         description="Уникальный идентификатор сообщения на стороне клиента",
     )
+
+    @model_validator(mode="after")
+    def set_client_random_id(self) -> "TdmSendTextMessageRequest":
+        """Устанавливает clientRandomId, если он не был передан (равен 0)."""
+        if self.clientRandomId == 0:
+            self.clientRandomId = _generate_client_random_id()
+        return self
     message: str = Field(
         ...,
         description="Текст сообщения для отправки",
