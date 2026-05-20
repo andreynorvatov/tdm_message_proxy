@@ -1,11 +1,18 @@
+import time
+
 from pydantic import BaseModel, Field
+
+
+def _generate_client_random_id() -> int:
+    """Генерация уникального идентификатора на основе временной метки."""
+    return int(time.time())
 
 
 class TdmSendTextMessageRequest(BaseModel):
     """Модель запроса на отправку текстового сообщения в TDM."""
 
     clientRandomId: int = Field(
-        ...,
+        default_factory=_generate_client_random_id,
         description="Уникальный идентификатор сообщения на стороне клиента",
     )
     message: str = Field(
@@ -17,11 +24,7 @@ class TdmSendTextMessageRequest(BaseModel):
 class TdmSendTextMessageResponse(BaseModel):
     """Модель ответа на отправку текстового сообщения в TDM."""
 
-    status: str = Field(
+    messageId: int = Field(
         ...,
-        description="Статус ответа (например, 'ok' или 'error')",
-    )
-    message: str | None = Field(
-        default=None,
-        description="Дополнительное сообщение от сервера",
+        description="ID отправленного сообщения в TDM",
     )

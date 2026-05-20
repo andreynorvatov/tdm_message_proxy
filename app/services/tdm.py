@@ -42,12 +42,13 @@ class TdmService:
         """
         url = self._get_send_text_message_url()
         headers = self._get_headers()
-        payload = request.model_dump()
+        payload = request.model_dump(exclude_none=True)
 
         logger.info(
             "Sending text message to TDM",
             url=url,
             client_random_id=request.clientRandomId,
+            payload=payload,
         )
 
         async with httpx.AsyncClient() as client:
@@ -61,8 +62,10 @@ class TdmService:
 
         response_data = response.json()
         logger.info(
-            "TDM message sent successfully",
-            status=response_data.get("status"),
+            "TDM raw response",
+            status_code=response.status_code,
+            response_text=response.text,
+            response_data=response_data,
         )
 
         return TdmSendTextMessageResponse(**response_data)
