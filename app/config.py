@@ -17,6 +17,15 @@ class Settings(BaseSettings):
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = Field(
         default="INFO", description="Уровень логирования"
     )
+    LOG_FILE_PATH: str = Field(
+        default="logs/app.log", description="Путь к файлу логов"
+    )
+    LOG_FILE_MAX_BYTES: int = Field(
+        default=10485760, description="Максимальный размер файла логов (байты)"
+    )
+    LOG_FILE_BACKUP_COUNT: int = Field(
+        default=5, description="Количество ротированных файлов логов"
+    )
 
     NT_BOT_TDM_ID: int = Field(..., description="ID бота в TDM")
     NT_BOT_TDM_CHAT_ID: int = Field(..., description="ID чата в TDM")
