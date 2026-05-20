@@ -44,8 +44,8 @@ class TdmService:
         headers = self._get_headers()
         payload = request.model_dump(exclude_none=True)
 
-        logger.info(
-            "Sending text message to TDM",
+        logger.debug(
+            "Отправка текстового сообщения в TDM",
             url=url,
             client_random_id=request.clientRandomId,
             payload=payload,
@@ -61,8 +61,8 @@ class TdmService:
             response.raise_for_status()
 
         response_data = response.json()
-        logger.info(
-            "TDM raw response",
+        logger.debug(
+            "TDM ответ",
             status_code=response.status_code,
             response_text=response.text,
             response_data=response_data,
